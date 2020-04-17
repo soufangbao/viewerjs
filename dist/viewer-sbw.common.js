@@ -1,12 +1,14 @@
 /*!
- * ViewerSbwl.js v1.5.1
+ * ViewerSbw.js v1.5.3
  * https://fengyuanchen.github.io/viewerjs
  *
  * Copyright 2015-present Chen Fengyuan
  * Released under the MIT license
  *
- * Date: 2020-04-17T06:54:55.276Z
+ * Date: 2020-04-17T10:10:56.296Z
  */
+
+'use strict';
 
 function _typeof(obj) {
   "@babel/helpers - typeof";
@@ -1090,6 +1092,7 @@ var render = {
   setItemsDisplay: function setItemsDisplay(i) {
     var items = this.items,
         length = this.length;
+    console.warn('ewekwjelkwj');
 
     if (length < 9) {
       return;
@@ -3148,4 +3151,4 @@ var Viewer = /*#__PURE__*/function () {
 
 assign(Viewer.prototype, render, events, handlers, methods, others);
 
-export default Viewer;
+module.exports = Viewer;

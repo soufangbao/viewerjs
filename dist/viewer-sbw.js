@@ -1,17 +1,17 @@
 /*!
- * ViewerSbwl.js v1.5.1
+ * ViewerSbw.js v1.5.3
  * https://fengyuanchen.github.io/viewerjs
  *
  * Copyright 2015-present Chen Fengyuan
  * Released under the MIT license
  *
- * Date: 2020-04-17T06:54:55.276Z
+ * Date: 2020-04-17T10:10:56.296Z
  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  (global = global || self, global.ViewerSbwl = factory());
+  (global = global || self, global.ViewerSbw = factory());
 }(this, (function () { 'use strict';
 
   function _typeof(obj) {
@@ -1096,6 +1096,7 @@
     setItemsDisplay: function setItemsDisplay(i) {
       var items = this.items,
           length = this.length;
+      console.warn('ewekwjelkwj');
 
       if (length < 9) {
         return;
