@@ -1,16 +1,16 @@
 /*!
- * Viewer.js v1.5.0
+ * ViewerSbwl.js v1.5.1
  * https://fengyuanchen.github.io/viewerjs
  *
  * Copyright 2015-present Chen Fengyuan
  * Released under the MIT license
  *
- * Date: 2019-11-23T05:10:26.193Z
+ * Date: 2020-04-17T06:54:55.276Z
  */
 
-'use strict';
-
 function _typeof(obj) {
+  "@babel/helpers - typeof";
+
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
     _typeof = function (obj) {
       return typeof obj;
@@ -315,7 +315,7 @@ var TEMPLATE = '<div class="viewer-container" touch-action="none">' + '<div clas
 
 var IS_BROWSER = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 var WINDOW = IS_BROWSER ? window : {};
-var IS_TOUCH_DEVICE = IS_BROWSER ? 'ontouchstart' in WINDOW.document.documentElement : false;
+var IS_TOUCH_DEVICE = IS_BROWSER && WINDOW.document.documentElement ? 'ontouchstart' in WINDOW.document.documentElement : false;
 var HAS_POINTER_EVENT = IS_BROWSER ? 'PointerEvent' in WINDOW : false;
 var NAMESPACE = 'viewer'; // Actions
 
@@ -1087,16 +1087,58 @@ var render = {
       });
     }
   },
+  setItemsDisplay: function setItemsDisplay(i) {
+    var items = this.items,
+        length = this.length;
+
+    if (length < 9) {
+      return;
+    }
+
+    var firstIdx = Math.max(i - 4, 0);
+    var lastIdx = Math.min(i + 4, length);
+    var minIdx = Math.max(lastIdx - 8, 0);
+    var maxIdx = Math.min(firstIdx + 8, length - 1);
+    var isPrevRemain = i - 4 >= 0;
+    var isNextRemain = i + 4 <= length - 1;
+    items.forEach(function (item, key) {
+      if (key <= i) {
+        if (isPrevRemain && key < minIdx) {
+          setStyle(item, {
+            display: 'none'
+          });
+        } else {
+          setStyle(item, {
+            display: 'block'
+          });
+        }
+      }
+
+      if (key > i) {
+        if (isNextRemain && key > maxIdx) {
+          setStyle(item, {
+            display: 'none'
+          });
+        } else {
+          setStyle(item, {
+            display: 'block'
+          });
+        }
+      }
+    });
+  },
   renderList: function renderList(index) {
+    var items = this.items;
     var i = index || this.index;
-    var width = this.items[i].offsetWidth || 30;
+    var width = items[i].offsetWidth || 30;
     var outerWidth = width + 1; // 1 pixel of `margin-left` width
-    // Place the active item in the center of the screen
+
+    this.setItemsDisplay(i); // Place the active item in the center of the screen
 
     setStyle(this.list, assign({
-      width: outerWidth * this.length
-    }, getTransforms({
-      translateX: (this.viewerData.width - width) / 2 - outerWidth * i
+      width: outerWidth * Math.min(this.length, 9),
+      margin: '0 auto'
+    }, getTransforms({// translateX: ((this.viewerData.width - width) / 2) - (outerWidth * i),
     })));
   },
   resetList: function resetList() {
@@ -1801,7 +1843,7 @@ var methods = {
 
     var viewer = this.viewer;
 
-    if (options.transition && !immediate) {
+    if (options.transition && hasClass(this.image, CLASS_TRANSITION) && !immediate) {
       var hidden = this.hidden.bind(this);
 
       var hide = function hide() {
@@ -1824,7 +1866,7 @@ var methods = {
         }
       }; // Note that the `CLASS_TRANSITION` class will be removed on pointer down (#255)
 
-      if (this.viewed && hasClass(this.image, CLASS_TRANSITION)) {
+      if (this.viewed) {
         addListener(this.image, EVENT_TRANSITION_END, hide, {
           once: true
         });
@@ -2785,9 +2827,7 @@ var others = {
 
 var AnotherViewer = WINDOW.Viewer;
 
-var Viewer =
-/*#__PURE__*/
-function () {
+var Viewer = /*#__PURE__*/function () {
   /**
    * Create a new Viewer.
    * @param {Element} element - The target element for viewing.
@@ -3108,4 +3148,4 @@ function () {
 
 assign(Viewer.prototype, render, events, handlers, methods, others);
 
-module.exports = Viewer;
+export default Viewer;
