@@ -127,16 +127,48 @@ export default {
     }
   },
 
+  setItemsDisplay(i) {
+    const { items, length } = this;
+    if (length < 9) {
+      return;
+    }
+    const firstIdx = Math.max(i - 4, 0);
+    const lastIdx = Math.min(i + 4, length);
+    const minIdx = Math.max(lastIdx - 8, 0);
+    const maxIdx = Math.min(firstIdx + 8, length - 1);
+    const isPrevRemain = i - 4 >= 0;
+    const isNextRemain = i + 4 <= length - 1;
+    items.forEach((item, key) => {
+      if (key <= i) {
+        if (isPrevRemain && key < minIdx) {
+          setStyle(item, { display: 'none' });
+        } else {
+          setStyle(item, { display: 'block' });
+        }
+      }
+      if (key > i) {
+        if (isNextRemain && key > maxIdx) {
+          setStyle(item, { display: 'none' });
+        } else {
+          setStyle(item, { display: 'block' });
+        }
+      }
+    });
+  },
+
   renderList(index) {
+    const { items } = this;
     const i = index || this.index;
-    const width = this.items[i].offsetWidth || 30;
+    const width = items[i].offsetWidth || 30;
     const outerWidth = width + 1; // 1 pixel of `margin-left` width
+    this.setItemsDisplay(i);
 
     // Place the active item in the center of the screen
     setStyle(this.list, assign({
-      width: outerWidth * this.length,
+      width: outerWidth * Math.min(this.length, 9),
+      margin: '0 auto',
     }, getTransforms({
-      translateX: ((this.viewerData.width - width) / 2) - (outerWidth * i),
+      // translateX: ((this.viewerData.width - width) / 2) - (outerWidth * i),
     })));
   },
 
